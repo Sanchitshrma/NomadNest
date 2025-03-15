@@ -77,9 +77,6 @@ npm start
 ## 📌 Contributing
 Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
-## 💙 Special Thanks
-A huge shoutout to **Shradha Khapra** and **Apna College** for their amazing guidance, which helped me build my first full-stack project! 🙌
-
 ## 📜 License
 This project is open-source and available under the [MIT License](LICENSE).
 
@@ -88,4 +85,4 @@ This project is open-source and available under the [MIT License](LICENSE).
 ### ⭐ Show Your Support
 If you like this project, give it a **star** ⭐ on GitHub and share your feedback!
 
-#WebDevelopment #MERN #NodeJS #MongoDB #Cloudinary #Mapbox #NomadNest #ApnaCollege 🚀
+#WebDevelopment #MERN #NodeJS #MongoDB #Cloudinary #Mapbox #NomadNest 
