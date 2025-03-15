@@ -1,28 +1,91 @@
-**NomadNest Overview**:  
-NomadNest is an innovative platform that connects travelers with unique accommodations worldwide. The website offers a seamless user experience, allowing hosts to list their properties and guests to find and book stays tailored to their preferences. It emphasizes ease of use with features like robust search filters, interactive maps, and detailed property listings. With a clean design and user-friendly interface, NomadNest caters to both hosts seeking to monetize their spaces and travelers looking for memorable experiences.
+# 🌍 NomadNest - Travel Booking Platform
 
-**NomadNest - Tech Overview**  
+NomadNest is a full-stack web application that allows travelers to find and book unique stays across the world. It provides an intuitive user experience with features like interactive maps, user authentication, reviews, and secure image storage.
 
-NomadNest is built using a modern tech stack to ensure performance, scalability, and a smooth user experience:  
+## 🚀 Live Demo
+[Wanderlust](https://wanderlust-ooa7.onrender.com/listings)
 
-1. **Frontend**:  
-   - **HTML**: For structuring the website and ensuring semantic markup.  
-   - **CSS**: Used for styling the user interface, ensuring a visually appealing and responsive design.  
-   - **JavaScript**: Adds interactivity, such as dynamic filtering, user inputs, and other client-side functionalities.  
+⚠ **Note:** The website is hosted on **Render's free tier**, so it may take a few seconds to load initially. Please be patient! ⏳
 
-2. **Backend**:  
-   - **Node.js**: Serves as the runtime environment for building a scalable and efficient server-side architecture.  
-   - **Express.js**: A web application framework for Node.js, used to handle routing, middleware, and server logic.  
+## 🛠 Tech Stack
 
-3. **Database**:  
-   - **MongoDB**: A NoSQL database is used for storing user data, property listings, bookings, and other application data.  
+### **Frontend:**
+- HTML
+- CSS
+- JavaScript
+- EJS (Templating Engine)
 
-4. **Other Technologies**:  
-   - RESTful APIs facilitate communication between the frontend and backend, enabling secure data transfer.  
-   - Tools like EJS or similar templating engines may be used for rendering dynamic content.  
+### **Backend:**
+- Node.js
+- Express.js
 
-This tech stack ensures that NomadNest is robust, user-friendly, and capable of handling real-world scalability requirements for hosting and travel booking functionalities.
+### **Database & Storage:**
+- MongoDB (Database)
+- Cloudinary (Image Storage)
+- Mapbox (Interactive Maps)
 
+### **Authentication & Security:**
+- Passport.js (User Authentication)
+- Bcrypt.js (Password Hashing)
 
+### **Deployment:**
+- Render (Hosting)
 
+## 🔥 Features
+- 🏡 **Property Listings** – Users can browse, view, and explore unique stays.
+- 🔑 **User Authentication** – Secure login & registration using Passport.js.
+- 📍 **Interactive Maps** – Mapbox integration for precise location details.
+- 📸 **Image Uploads** – Cloudinary for optimized image storage.
+- ⭐ **Reviews & Ratings** – Users can review and rate listings.
+- 🔒 **Secure Access** – Password hashing and user role-based access.
+- 🌎 **Responsive Design** – Works on all devices.
 
+## 🛠 Upcoming Features (Under Development)
+- 🔍 **Search Functionality** – Implementing search to easily find listings.
+- 🏕️ **Listing Categories** – Filtering by type (mountains, beach, camping, etc.).
+
+## 🚀 Installation & Setup
+
+1. **Clone the repository**
+```sh
+git clone https://github.com/yourusername/Wanderlust.git
+cd Wanderlust
+```
+
+2. **Install dependencies**
+```sh
+npm install
+```
+
+3. **Set up environment variables** (Create a `.env` file and add the following)
+```env
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+MAPBOX_TOKEN=your_mapbox_token
+MONGO_URI=your_mongodb_connection_string
+SESSION_SECRET=your_secret_key
+```
+
+4. **Run the application**
+```sh
+npm start
+```
+
+5. Open in browser: `http://localhost:3000`
+
+## 📌 Contributing
+Contributions are welcome! Feel free to fork the repo and submit a pull request.
+
+## 💙 Special Thanks
+A huge shoutout to **Shradha Khapra** and **Apna College** for their amazing guidance, which helped me build my first full-stack project! 🙌
+
+## 📜 License
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+### ⭐ Show Your Support
+If you like this project, give it a **star** ⭐ on GitHub and share your feedback!
+
+#WebDevelopment #MERN #NodeJS #MongoDB #Cloudinary #Mapbox #NomadNest #ApnaCollege 🚀
