@@ -74,15 +74,3 @@ npm start
 
 5. Open in browser: `http://localhost:3000`
 
-## 📌 Contributing
-Contributions are welcome! Feel free to fork the repo and submit a pull request.
-
-## 📜 License
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-### ⭐ Show Your Support
-If you like this project, give it a **star** ⭐ on GitHub and share your feedback!
-
-#WebDevelopment #MERN #NodeJS #MongoDB #Cloudinary #Mapbox #NomadNest 
