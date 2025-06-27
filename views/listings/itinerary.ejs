@@ -1,0 +1,46 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="container mt-5">
+  <h2 class="mb-4">🧳 Plan Your Trip</h2>
+
+  <form action="/listings/itinerary" method="POST">
+    <div class="mb-3">
+      <label for="place" class="form-label">Destination</label>
+      <input
+        type="text"
+        class="form-control"
+        id="place"
+        name="place"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="days" class="form-label">Number of Days</label>
+      <input
+        type="number"
+        class="form-control"
+        id="days"
+        name="days"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-danger">Generate Itinerary</button>
+    <hr />
+    <p
+      id="wait-message"
+      style="font-size: 16px; margin-top: 12px; font-weight: 500"
+    >
+      Please hold on for a moment after clicking
+      <strong>"Generate Itinerary"</strong> — we're crafting your personalized
+      travel plan.
+    </p>
+    <hr />
+  </form>
+
+  <% if (itinerary) { %>
+  <div class="mt-4 p-3 bg-light rounded shadow">
+    <h4>Your Itinerary:</h4>
+    <div class="itinerary-content"><%- itinerary %></div>
+  </div>
+  <% } %>
+</div>

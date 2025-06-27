@@ -1,0 +1,95 @@
+<!-- views/listings/search.ejs -->
+<% layout("/layouts/boilerplate")%>
+<style>
+  .search-header {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .search-results-count {
+    color: #666;
+    font-size: 1.1rem;
+  }
+
+  .search-term {
+    font-weight: bold;
+    color: #fe424d;
+  }
+
+  .back-to-explore {
+    margin-bottom: 1rem;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+  }
+
+  .no-results i {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div class="container">
+  <% if (errorMessage) { %>
+  <div class="alert alert-warning text-center"><%= errorMessage %></div>
+  <% } %>
+  <div class="back-to-explore">
+    <a href="/listings" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-arrow-left"></i> Back to Explore
+    </a>
+  </div>
+
+  <div class="search-header">
+    <h2>Search Results</h2>
+    <p class="search-results-count">
+      Found <strong><%= resultCount %></strong> <%= resultCount === 1 ?
+      'listing' : 'listings' %> for "<span class="search-term"
+        ><%= searchTerm %></span
+      >"
+    </p>
+  </div>
+
+  <% if (allListing.length > 0) { %>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    <% for(let listing of allListing) { %>
+    <a href="/listings/<%= listing._id %>" class="listing_links">
+      <div class="card col listing-card">
+        <img
+          src="<%= listing.image.url %>"
+          class="card-img-top"
+          alt="listing_image"
+          style="height: 20rem"
+        />
+        <div class="card-img-overlay"></div>
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b>
+            <br />
+            <small class="text-muted">
+              <i class="fa-solid fa-location-dot"></i>
+              <%= listing.location %>, <%= listing.country %>
+            </small>
+            <br />
+            &#8377;<%= listing.price.toLocaleString("en-IN") %> /night
+          </p>
+        </div>
+      </div>
+    </a>
+    <% } %>
+  </div>
+  <% } else { %>
+  <div class="no-results">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <h3>No listings found</h3>
+    <p>Try adjusting your search terms or explore all listings.</p>
+    <a href="/listings" class="btn" style="background-color: #fa424d">
+      Explore All Listings
+    </a>
+  </div>
+  <% } %>
+</div>

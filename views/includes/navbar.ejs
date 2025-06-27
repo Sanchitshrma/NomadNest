@@ -1,0 +1,188 @@
+<!-- views/includes/navbar.ejs -->
+<style>
+  .search-btn {
+    background-color: #fe424d;
+    color: white;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: white;
+  }
+
+  .search-btn i {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
+  .search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 1rem;
+    position: relative;
+  }
+
+  .search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+  }
+
+  .suggestion-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .search-container {
+    position: relative;
+    display: flex;
+  }
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    &nbsp; &nbsp;
+    <a class="navbar-brand" href="/listings"
+      ><i class="fa-solid fa-map-location-dot" style="color: #fa424d"></i
+    ></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+        <a class="nav-link" href="/listings/itinerary">Create Itinerary</a>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <form
+          class="d-flex search-container"
+          role="search"
+          action="/search"
+          method="GET"
+        >
+          <div style="position: relative; flex: 1">
+            <input
+              class="form-control me-2 search-inp"
+              type="search"
+              name="q"
+              id="searchInput"
+              placeholder="Search destination"
+              autocomplete="off"
+              value="<%= locals.searchTerm || '' %>"
+            />
+            <div id="searchSuggestions" class="search-suggestions"></div>
+          </div>
+          &nbsp; &nbsp;
+          <button class="btn search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>Search
+          </button>
+        </form>
+      </div>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Add your place</a>
+        <% if (typeof currUser === "undefined" || !currUser) { %>
+        <a class="nav-link" href="/signup"><b>Sign up</b></a>
+        <a class="nav-link" href="/login"><b>Log in</b></a>
+        <% } else { %>
+        <a class="nav-link" href="/logout"><b>Log out</b></a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const suggestionsContainer = document.getElementById("searchSuggestions");
+    let debounceTimeout;
+
+    searchInput.addEventListener("input", function () {
+      const query = this.value.trim();
+
+      clearTimeout(debounceTimeout);
+
+      if (query.length < 2) {
+        suggestionsContainer.style.display = "none";
+        return;
+      }
+
+      debounceTimeout = setTimeout(() => {
+        fetch(`/search/suggestions?q=${encodeURIComponent(query)}`)
+          .then((response) => response.json())
+          .then((suggestions) => {
+            if (suggestions.length > 0) {
+              suggestionsContainer.innerHTML = suggestions
+                .map(
+                  (suggestion) => `
+                <div class="suggestion-item" onclick="selectSuggestion('${suggestion.replace(
+                  /'/g,
+                  "\\'"
+                )}')">
+                  ${suggestion}
+                </div>
+              `
+                )
+                .join("");
+              suggestionsContainer.style.display = "block";
+            } else {
+              suggestionsContainer.style.display = "none";
+            }
+          })
+          .catch((error) => {
+            console.error("Search suggestions error:", error);
+            suggestionsContainer.style.display = "none";
+          });
+      }, 300);
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", function (event) {
+      if (
+        !searchInput.contains(event.target) &&
+        !suggestionsContainer.contains(event.target)
+      ) {
+        suggestionsContainer.style.display = "none";
+      }
+    });
+
+    // Show suggestions when input is focused (if there are any)
+    searchInput.addEventListener("focus", function () {
+      if (suggestionsContainer.innerHTML.trim() !== "") {
+        suggestionsContainer.style.display = "block";
+      }
+    });
+  });
+
+  function selectSuggestion(suggestion) {
+    document.getElementById("searchInput").value = suggestion;
+    document.getElementById("searchSuggestions").style.display = "none";
+    // Optionally auto-submit the form
+    document.querySelector(".search-container").submit();
+  }
+</script>
