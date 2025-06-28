@@ -13,7 +13,7 @@ router.get("/itinerary", listingController.renderItineraryForm);
 router.post("/itinerary", listingController.generateItinerary);
 
 router
-  .route("/")
+  .route("/listings")
   //index route
   .get(wrapAsync(listingController.index))
   // create route
@@ -49,5 +49,7 @@ router.get(
   isOwner,
   wrapAsync(listingController.renderEditForm)
 );
+
+// router.get("/", listingController.landingPage); // Moved to top to prevent route conflicts
 
 module.exports = router;

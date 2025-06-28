@@ -1,0 +1,67 @@
+<% layout("/layouts/boilerplate")%>
+
+<style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 3rem 2rem;
+  }
+
+  .photo-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+
+  .photo-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .photo-tile:hover img {
+    transform: scale(1.05);
+  }
+
+  .photo-caption {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  .explore-btn-container {
+    text-align: center;
+    margin: 3rem 0;
+  }
+
+  .explore-btn {
+    font-size: 1.3rem;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+  }
+</style>
+
+<div class="container-fluid">
+  <!-- Image Grid with Captions -->
+  <div class="photo-grid">
+    <% landingImages.forEach(image => { %>
+    <div class="photo-tile">
+      <img src="<%= image.url %>" alt="Place" />
+      <div class="photo-caption"><%= image.caption %></div>
+    </div>
+    <% }) %>
+  </div>
+
+  <!-- Explore Button -->
+  <div class="explore-btn-container">
+    <a href="/listings" class="btn btn-danger explore-btn">Explore NomadNest</a>
+  </div>
+</div>
