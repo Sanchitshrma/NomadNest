@@ -20,6 +20,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/user.js");
 const searchRouter = require("./routes/search.js");
+const homeRouter = require("./routes/home");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -40,6 +41,7 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use("/search", searchRouter);
+app.use("/", homeRouter);
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
@@ -96,7 +98,7 @@ app.use((req, res, next) => {
 //   res.send(registerUser);
 // });
 
-app.use("/listings", listingRouter);
+app.use("/", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 

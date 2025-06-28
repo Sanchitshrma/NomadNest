@@ -117,3 +117,47 @@ module.exports.generateItinerary = async (req, res) => {
     });
   }
 };
+
+module.exports.landingPage = (req, res) => {
+  const landingImages = [
+    {
+      url: "/images/beach.jpg",
+      caption: "Let the waves take you where the Wi-Fi can't.",
+    },
+    {
+      url: "/images/mountains.jpg",
+      caption: "Climb mountains, not corporate ladders.",
+    },
+    {
+      url: "/images/forest.jpg",
+      caption: "Where trees speak and cities stay silent.",
+    },
+    { url: "/images/lake.jpg", caption: "Still waters. Stirred souls." },
+    {
+      url: "/images/desert.jpg",
+      caption: "Whispers of the dunes and wanderers' tales.",
+    },
+    { url: "/images/snow.jpg", caption: "Chill in the air. Fire in the soul." },
+    {
+      url: "/images/bridge.jpg",
+      caption: "Cross bridges to find yourself.",
+    },
+    {
+      url: "/images/city.jpg",
+      caption: "The city lights hide a thousand untold journeys.",
+    },
+    {
+      url: "/images/jungle.jpg",
+      caption: "In the heart of the jungle, silence speaks loudest.",
+    },
+    {
+      url: "/images/cabin.jpg",
+      caption: "Cabins in the wild know secrets the world forgot.",
+    },
+    {
+      url: "/images/roadtrip.jpg",
+      caption: "Every road trip writes its own poetry.",
+    },
+  ];
+  res.render("home", { landingImages });
+};
