@@ -40,8 +40,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
-app.use("/search", searchRouter);
-app.use("/", homeRouter);
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
@@ -98,9 +96,11 @@ app.use((req, res, next) => {
 //   res.send(registerUser);
 // });
 
-app.use("/", listingRouter);
+app.use("/search", searchRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
+app.use("/", homeRouter);
+app.use("/listings", listingRouter);
 
 app.all("/*", (req, res, next) => {
   next(new ExpressError(404, "Page not found!"));

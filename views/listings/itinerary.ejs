@@ -1,9 +1,27 @@
 <% layout("/layouts/boilerplate")%>
 
+<div
+  id="loading-spinner"
+  style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  "
+>
+  <div class="spinner"></div>
+</div>
+
 <div class="container mt-5">
   <h2 class="mb-4">🧳 Plan Your Trip</h2>
 
-  <form action="/listings/itinerary" method="POST">
+  <form action="/listings/itinerary" method="POST" id="itinerary-form">
     <div class="mb-3">
       <label for="place" class="form-label">Destination</label>
       <input
@@ -44,3 +62,14 @@
   </div>
   <% } %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("#itinerary-form");
+    if (form) {
+      form.addEventListener("submit", function () {
+        document.getElementById("loading-spinner").style.display = "flex";
+      });
+    }
+  });
+</script>

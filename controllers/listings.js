@@ -158,6 +158,10 @@ module.exports.landingPage = (req, res) => {
       url: "/images/roadtrip.jpg",
       caption: "Every road trip writes its own poetry.",
     },
+    {
+      url: "/images/extra.jpg",
+      caption: "Journey begins where the signal ends.",
+    },
   ];
   res.render("home", { landingImages });
 };
