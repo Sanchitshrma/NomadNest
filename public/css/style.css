@@ -125,6 +125,32 @@ body {
   object-fit: cover;
 }
 
+.badge-category {
+  background-color: #fce7e9;
+  color: #c0262d;
+  border: 1px solid #f5c2c7;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+.amenity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.95rem;
+}
+.amenity i { color: #666; }
+
 .btns {
   display: flex;
 }

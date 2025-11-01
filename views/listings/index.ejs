@@ -5,7 +5,17 @@
     </form> -->
 
 <style>
-  /* Filter bar: horizontal scroll on mobile */
+  /* Top filters panel */
+  .filters-panel {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .filters-panel .form-control, .filters-panel .form-select { min-width: 120px; }
+
+  /* Horizontal icon bar: scroll on mobile */
   #filters {
     display: flex;
     align-items: center;
@@ -44,6 +54,50 @@
   .listing-img { aspect-ratio: 16 / 10; width: 100%; object-fit: cover; }
   .price-line { display: flex; align-items: baseline; gap: 0.25rem; }
 </style>
+
+<!-- Filters & sorting -->
+<form class="filters-panel" method="GET" action="/listings">
+  <div class="row g-2 align-items-end">
+    <div class="col-6 col-sm-3 col-lg-2">
+      <label class="form-label">Min price</label>
+      <input type="number" name="minPrice" class="form-control" value="<%= (filters && filters.minPrice) || '' %>" />
+    </div>
+    <div class="col-6 col-sm-3 col-lg-2">
+      <label class="form-label">Max price</label>
+      <input type="number" name="maxPrice" class="form-control" value="<%= (filters && filters.maxPrice) || '' %>" />
+    </div>
+    <div class="col-6 col-sm-3 col-lg-3">
+      <label class="form-label">Category</label>
+      <select name="category" class="form-select">
+        <option value="">All</option>
+        <option value="rooms" <%= (filters && filters.category==='rooms')?'selected':'' %>>Rooms</option>
+        <option value="mountains" <%= (filters && filters.category==='mountains')?'selected':'' %>>Mountains</option>
+        <option value="pools" <%= (filters && filters.category==='pools')?'selected':'' %>>Pools</option>
+        <option value="camping" <%= (filters && filters.category==='camping')?'selected':'' %>>Camping</option>
+        <option value="arctic" <%= (filters && filters.category==='arctic')?'selected':'' %>>Arctic</option>
+        <option value="skiing" <%= (filters && filters.category==='skiing')?'selected':'' %>>Skiing</option>
+        <option value="campervan" <%= (filters && filters.category==='campervan')?'selected':'' %>>Campervan</option>
+        <option value="hills" <%= (filters && filters.category==='hills')?'selected':'' %>>Hills</option>
+        <option value="castles" <%= (filters && filters.category==='castles')?'selected':'' %>>Castles</option>
+        <option value="luxe" <%= (filters && filters.category==='luxe')?'selected':'' %>>Luxe</option>
+        <option value="cruise" <%= (filters && filters.category==='cruise')?'selected':'' %>>Cruise</option>
+      </select>
+    </div>
+    <div class="col-6 col-sm-3 col-lg-3">
+      <label class="form-label">Sort</label>
+      <select name="sort" class="form-select">
+        <option value="">Default</option>
+        <option value="price-asc" <%= (filters && filters.sort==='price-asc')?'selected':'' %>>Price: Low to High</option>
+        <option value="price-desc" <%= (filters && filters.sort==='price-desc')?'selected':'' %>>Price: High to Low</option>
+        <option value="newest" <%= (filters && filters.sort==='newest')?'selected':'' %>>Newest</option>
+      </select>
+    </div>
+    <div class="col-12 col-lg-2 d-flex gap-2">
+      <button class="btn btn-dark w-100" type="submit">Apply</button>
+      <a class="btn btn-outline-secondary w-100" href="/listings">Reset</a>
+    </div>
+  </div>
+</form>
 
 <div id="filters" class="mb-3" aria-label="Listing filters">
   <a class="filter" href="/listings" title="All">
@@ -90,6 +144,7 @@
   </div>
 </div>
 
+<!-- Results -->
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 listing-grid">
   <% for (let listing of allListing) { %>
   <div class="col">
@@ -110,6 +165,27 @@
   </div>
   <% } %>
 </div>
+
+<!-- Pagination -->
+<% if (pagination && pagination.totalPages > 1) { %>
+<nav aria-label="Listings pagination" class="mt-2">
+  <ul class="pagination justify-content-center">
+    <% const prev = Math.max(1, pagination.page - 1); %>
+    <li class="page-item <%= pagination.page===1 ? 'disabled' : '' %>">
+      <a class="page-link" href="?page=<%= prev %>&limit=<%= pagination.limit %>&minPrice=<%= filters.minPrice %>&maxPrice=<%= filters.maxPrice %>&category=<%= filters.category %>&sort=<%= filters.sort %>">Prev</a>
+    </li>
+    <% for (let p = 1; p <= pagination.totalPages; p++) { %>
+      <li class="page-item <%= p===pagination.page ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= p %>&limit=<%= pagination.limit %>&minPrice=<%= filters.minPrice %>&maxPrice=<%= filters.maxPrice %>&category=<%= filters.category %>&sort=<%= filters.sort %>"><%= p %></a>
+      </li>
+    <% } %>
+    <% const next = Math.min(pagination.totalPages, pagination.page + 1); %>
+    <li class="page-item <%= pagination.page===pagination.totalPages ? 'disabled' : '' %>">
+      <a class="page-link" href="?page=<%= next %>&limit=<%= pagination.limit %>&minPrice=<%= filters.minPrice %>&maxPrice=<%= filters.maxPrice %>&category=<%= filters.category %>&sort=<%= filters.sort %>">Next</a>
+    </li>
+  </ul>
+</nav>
+<% } %>
 
 <script>
   const taxSwitch = document.getElementById("flexSwitchCheckDefault");
