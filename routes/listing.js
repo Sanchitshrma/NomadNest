@@ -14,7 +14,7 @@ router.post("/itinerary", listingController.generateItinerary);
 
 router
   .route("/")
-  //index route
+  // index route
   .get(wrapAsync(listingController.index))
   // create route
   .post(

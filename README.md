@@ -3,7 +3,7 @@
 NomadNest is a full-stack web application that allows travelers to find and book unique stays across the world. It provides an intuitive user experience with features like interactive maps, user authentication, reviews, and secure image storage.
 
 ## 🚀 Live Demo
-[NomadNest](https://wanderlust-ooa7.onrender.com/listings)
+[NomadNest](https://nomadnest-zzu1.onrender.com/listings)
 
 ⚠ **Note:** The website is hosted on **Render's free tier**, so it may take a few seconds to load initially. Please be patient! ⏳
 

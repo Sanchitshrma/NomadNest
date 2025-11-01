@@ -11,6 +11,139 @@ const sampleListings = [
     location: "Malibu",
     country: "United States",
   },
+  // Demo listings for filter icons
+  {
+    title: "Budget City Room near Downtown",
+    description:
+      "A private room in the city center. Great for solo travelers. Keywords: room, city, budget.",
+    image: {
+      filename: "room-city",
+      url: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 1200,
+    location: "Pune",
+    country: "India",
+  },
+  {
+    title: "Alpine Mountain Cabin Retreat",
+    description:
+      "Secluded cabin with breathtaking mountain views. Keywords: mountain, alpine, hiking.",
+    image: {
+      filename: "mountain-cabin",
+      url: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 2200,
+    location: "Manali",
+    country: "India",
+  },
+  {
+    title: "Villa with Private Infinity Pool",
+    description:
+      "Luxury villa featuring an infinity pool and sun terrace. Keywords: pool, luxury, villa.",
+    image: {
+      filename: "villa-pool",
+      url: "https://images.unsplash.com/photo-1501117716987-c8e2a3a67d74?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 4800,
+    location: "Goa",
+    country: "India",
+  },
+  {
+    title: "Lakeside Glamping Camp",
+    description:
+      "Comfortable tents by the lake with campfire nights. Keywords: camp, camping, lakeside.",
+    image: {
+      filename: "glamping-camp",
+      url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 900,
+    location: "Udaipur",
+    country: "India",
+  },
+  {
+    title: "Arctic Glass Igloo Experience",
+    description:
+      "Sleep under the northern lights. Keywords: arctic, snow, ice.",
+    image: {
+      filename: "arctic-igloo",
+      url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 6500,
+    location: "Rovaniemi",
+    country: "Finland",
+  },
+  {
+    title: "Ski-In/Ski-Out Chalet on the Slopes",
+    description:
+      "Walk out onto the piste each morning. Keywords: ski, snow, chalet.",
+    image: {
+      filename: "ski-chalet",
+      url: "https://images.unsplash.com/photo-1544989164-31dc3c645987?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 5200,
+    location: "Gulmarg",
+    country: "India",
+  },
+  {
+    title: "Campervan Site with Full Hookups",
+    description:
+      "Secure campervan/RV spot with power and water. Keywords: campervan, rv, van.",
+    image: {
+      filename: "campervan-site",
+      url: "https://images.unsplash.com/photo-1488740304459-45c4277a2d9b?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 600,
+    location: "Rishikesh",
+    country: "India",
+  },
+  {
+    title: "Hilltop Cottage with Hills View",
+    description:
+      "Panoramic hills all around. Keywords: hill, hills, viewpoint.",
+    image: {
+      filename: "hilltop-cottage",
+      url: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 1800,
+    location: "Munnar",
+    country: "India",
+  },
+  {
+    title: "Stay in a Historic Castle Wing",
+    description:
+      "Live like royalty in a real castle. Keywords: castle, historic.",
+    image: {
+      filename: "castle-stay",
+      url: "https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 7000,
+    location: "Edinburgh",
+    country: "United Kingdom",
+  },
+  {
+    title: "Luxe Penthouse with City Skyline",
+    description:
+      "Ultra luxury, high floor. Keywords: luxe, luxury, penthouse.",
+    image: {
+      filename: "luxe-penthouse",
+      url: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 9500,
+    location: "Mumbai",
+    country: "India",
+  },
+  {
+    title: "Cruise Cabin by the Marina",
+    description:
+      "Enjoy a cruise-style cabin experience by the docks. Keywords: cruise, island, beachfront.",
+    image: {
+      filename: "cruise-cabin",
+      url: "https://images.unsplash.com/photo-1504600770771-fb03a6961d33?q=80&w=1200&auto=format&fit=crop",
+    },
+    price: 3500,
+    location: "Kochi",
+    country: "India",
+  },
   {
     title: "Modern Loft in Downtown",
     description:

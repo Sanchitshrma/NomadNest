@@ -7,6 +7,11 @@ const map = new mapboxgl.Map({
   zoom: 10, // starting zoom
 });
 
+// Ensure map resizes with its container on viewport changes
+window.addEventListener("resize", () => {
+  map.resize();
+});
+
 const marker = new mapboxgl.Marker({ color: "red" })
   .setLngLat(coordinates) //Listing.geometry.coordinates
   .setPopup(

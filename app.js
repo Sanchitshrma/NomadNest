@@ -22,96 +22,93 @@ const userRouter = require("./routes/user.js");
 const searchRouter = require("./routes/search.js");
 const homeRouter = require("./routes/home");
 
-const dbUrl = process.env.ATLASDB_URL;
+// Prefer Atlas if provided, otherwise fall back to local Mongo for dev
+const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
-  .then((res) => {
-    console.log("connected");
+  .then(() => {
+    console.log("MongoDB connected");
+
+    // After successful DB connection, wire up session store using the active client
+    const store = MongoStore.create({
+      client: mongoose.connection.getClient(),
+      crypto: { secret: process.env.SECRET },
+      touchAfter: 24 * 3600,
+    });
+
+    bootstrap(store);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    console.warn("Falling back to in-memory sessions. Logins won't persist across restarts.");
+    // Fallback to memory store so routes still work when DB is unreachable
+    const memoryStore = new session.MemoryStore();
+    bootstrap(memoryStore);
+  });
 
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect(dbUrl, { serverSelectionTimeoutMS: 8000 });
 }
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
+function bootstrap(store) {
+  app.set("view engine", "ejs");
+  app.set("views", path.join(__dirname, "views"));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(methodOverride("_method"));
+  app.engine("ejs", ejsMate);
+  app.use(express.static(path.join(__dirname, "/public")));
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET,
-  },
-  touchAfter: 24 * 3600,
-});
+  const sessionOptions = {
+    store,
+    secret: process.env.SECRET || "devsecret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    },
+  };
 
-store.on("error", () => {
-  console.log("ERROR IN MONGO SESSION STORE", err);
-});
+  if (store && store.on) {
+    store.on("error", (err) => {
+      console.error("Session store error:", err);
+    });
+  }
 
-const sessionOptions = {
-  store,
-  secret: process.env.SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  },
-};
+  app.use(session(sessionOptions));
+  app.use(flash());
 
-// app.get("/", (req, res) => {
-//   res.send("Hie , I am root");
-// });
+  app.use(passport.initialize());
+  app.use(passport.session());
+  passport.use(new LocalStrategy(User.authenticate()));
+  passport.serializeUser(User.serializeUser());
+  passport.deserializeUser(User.deserializeUser());
 
-app.use(session(sessionOptions));
-app.use(flash());
+  app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
+    next();
+  });
 
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+  // Routers (after session/passport so auth works and failures don't kill all routes)
+  app.use("/search", searchRouter);
+  app.use("/", homeRouter);
+  app.use("/listings", listingRouter);
+  app.use("/listings/:id/reviews", reviewsRouter);
+  app.use("/", userRouter);
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+  app.all("/*", (req, res, next) => {
+    next(new ExpressError(404, "Page not found!"));
+  });
 
-app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currUser = req.user;
-  next();
-});
+  app.use((err, req, res, next) => {
+    let { statusCode = 500, message = "Something went wrong !!" } = err;
+    res.status(statusCode).render("./listings/error.ejs", { message });
+  });
 
-// app.get("/demouser", async (req, res) => {
-//   let fakeUser = new User({
-//     email: "abe@gmail.com",
-//     username: "Abc",
-//   });
-
-//   let registerUser = await User.register(fakeUser, "helloworld");
-//   res.send(registerUser);
-// });
-
-app.use("/search", searchRouter);
-app.use("/listings/:id/reviews", reviewsRouter);
-app.use("/", userRouter);
-app.use("/", homeRouter);
-app.use("/listings", listingRouter);
-
-app.all("/*", (req, res, next) => {
-  next(new ExpressError(404, "Page not found!"));
-});
-
-app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Something went wrong !!" } = err;
-  res.status(statusCode).render("./listings/error.ejs", { message });
-  // res.status(statusCode).render("./listings/error.ejs", { err });
-});
-
-app.listen(8080, () => {
-  console.log("Server is listening to port:8080");
-});
+  app.listen(8080, () => {
+    console.log("Server is listening to port:8080");
+  });
+}

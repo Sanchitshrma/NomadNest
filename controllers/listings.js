@@ -4,8 +4,94 @@ const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
-  let allListing = await Listing.find({});
-  res.render("listings/index.ejs", { allListing });
+  const {
+    minPrice,
+    maxPrice,
+    category,
+    sort,
+    page = 1,
+    limit = 12,
+  } = req.query;
+
+  // Build query
+  const query = {};
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) query.price.$gte = Number(minPrice);
+    if (maxPrice) query.price.$lte = Number(maxPrice);
+  }
+
+  // Category mapping → regex search across title/description/location/country
+  const categoryMap = {
+    rooms: ["room"],
+    mountains: ["mountain", "alpine"],
+    pools: ["pool"],
+    camping: ["camp", "glamp"],
+    arctic: ["arctic", "snow", "ice"],
+    skiing: ["ski"],
+    campervan: ["campervan", "rv", "van"],
+    hills: ["hill", "hills"],
+    castles: ["castle", "historic"],
+    luxe: ["luxe", "luxury", "penthouse"],
+    cruise: ["cruise", "island", "beachfront"],
+    trending: [],
+  };
+
+  if (category && categoryMap[category]) {
+    const terms = categoryMap[category];
+    if (terms.length) {
+      query.$or = terms.map((t) => ({
+        $or: [
+          { title: { $regex: t, $options: "i" } },
+          { description: { $regex: t, $options: "i" } },
+          { location: { $regex: t, $options: "i" } },
+          { country: { $regex: t, $options: "i" } },
+        ],
+      }));
+    }
+  }
+
+  // Sorting
+  let sortSpec = {};
+  switch (sort) {
+    case "price-asc":
+      sortSpec = { price: 1 };
+      break;
+    case "price-desc":
+      sortSpec = { price: -1 };
+      break;
+    case "newest":
+      sortSpec = { _id: -1 }; // approximate newest
+      break;
+    default:
+      sortSpec = {};
+  }
+
+  const pageNum = Math.max(parseInt(page) || 1, 1);
+  const perPage = Math.min(Math.max(parseInt(limit) || 12, 1), 48);
+  const skip = (pageNum - 1) * perPage;
+
+  const total = await Listing.countDocuments(query);
+  const allListing = await Listing.find(query)
+    .sort(sortSpec)
+    .skip(skip)
+    .limit(perPage);
+
+  res.render("listings/index.ejs", {
+    allListing,
+    filters: {
+      minPrice: minPrice || "",
+      maxPrice: maxPrice || "",
+      category: category || "",
+      sort: sort || "",
+    },
+    pagination: {
+      page: pageNum,
+      limit: perPage,
+      total,
+      totalPages: Math.max(Math.ceil(total / perPage), 1),
+    },
+  });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -19,16 +105,79 @@ module.exports.showListing = async (req, res) => {
     .populate("owner");
   if (!listing) {
     req.flash("error", " Listing you requested does not exist");
-    res.redirect("/listings");
+    return res.redirect("/listings");
   }
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: listing.location,
-      limit: 1,
-    })
-    .send();
-  listing.geometry = response.body.features[0].geometry;
-  res.render("listings/show.ejs", { listing });
+
+  // Derive category heuristically from title/description/location
+  const text = `${listing.title} ${listing.description || ""} ${listing.location || ""} ${listing.country || ""}`;
+  const categoryMap = [
+    { key: "rooms", label: "Rooms", terms: ["room"] },
+    { key: "mountains", label: "Mountains", terms: ["mountain", "alpine"] },
+    { key: "pools", label: "Pools", terms: ["pool"] },
+    { key: "camping", label: "Camping", terms: ["camp", "glamp"] },
+    { key: "arctic", label: "Arctic", terms: ["arctic", "snow", "ice"] },
+    { key: "skiing", label: "Skiing", terms: ["ski"] },
+    { key: "campervan", label: "Campervan", terms: ["campervan", "rv", "van"] },
+    { key: "hills", label: "Hills", terms: ["hill", "hills"] },
+    { key: "castles", label: "Castles", terms: ["castle", "historic"] },
+    { key: "luxe", label: "Luxe", terms: ["luxe", "luxury", "penthouse"] },
+    { key: "cruise", label: "Cruise", terms: ["cruise", "island", "beachfront"] },
+  ];
+  let category = { key: "trending", label: "Trending", terms: [] };
+  for (const c of categoryMap) {
+    if (c.terms.some((t) => new RegExp(t, "i").test(text))) {
+      category = c;
+      break;
+    }
+  }
+
+  // Fetch similar listings by category (best-effort)
+  let similarListings = [];
+  if (category.terms.length) {
+    const or = category.terms.map((t) => ({
+      $or: [
+        { title: { $regex: t, $options: "i" } },
+        { description: { $regex: t, $options: "i" } },
+        { location: { $regex: t, $options: "i" } },
+        { country: { $regex: t, $options: "i" } },
+      ],
+    }));
+    similarListings = await Listing.find({ _id: { $ne: id }, $or: or })
+      .limit(6)
+      .sort({ _id: -1 });
+  } else {
+    similarListings = await Listing.find({ _id: { $ne: id } })
+      .limit(6)
+      .sort({ _id: -1 });
+  }
+
+  // Geocode (best-effort)
+  try {
+    let response = await geocodingClient
+      .forwardGeocode({ query: listing.location, limit: 1 })
+      .send();
+    if (response.body.features?.[0]?.geometry) {
+      listing.geometry = response.body.features[0].geometry;
+    }
+  } catch (e) {
+    // ignore geocode errors for view rendering
+  }
+
+  // Basic amenities (until dedicated schema exists)
+  const amenities = [
+    { icon: "fa-wifi", label: "Free WiFi" },
+    { icon: "fa-square-parking", label: "Parking" },
+    { icon: "fa-snowflake", label: "Air Conditioning" },
+    { icon: "fa-mug-saucer", label: "Breakfast Included" },
+    { icon: "fa-kitchen-set", label: "Kitchen" },
+    { icon: "fa-soap", label: "Washer" },
+    { icon: "fa-tv", label: "TV" },
+    { icon: "fa-dumbbell", label: "Gym" },
+    { icon: "fa-mountain", label: "Mountain View" },
+    { icon: "fa-leaf", label: "Nature View" },
+  ];
+
+  res.render("listings/show.ejs", { listing, category, amenities, similarListings });
 };
 
 module.exports.createListing = async (req, res) => {

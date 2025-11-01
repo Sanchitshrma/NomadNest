@@ -66,6 +66,7 @@ module.exports.searchListings = async (req, res) => {
         allListing: flexibleResults,
         searchTerm,
         resultCount: flexibleResults.length,
+        errorMessage: null,
       });
     }
 
