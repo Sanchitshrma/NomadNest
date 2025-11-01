@@ -13,7 +13,7 @@ body {
 }
 /* Navbar */
 .navbar {
-  height: 5rem;
+  min-height: 5rem;
   background-color: white;
 }
 
@@ -64,12 +64,24 @@ body {
 .listing-card {
   border: none !important;
   margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.listing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 .card-img-top {
   border-radius: 1rem !important;
   width: 100% !important;
   object-fit: cover !important;
+}
+
+/* Consistent image aspect ratio for listing cards */
+.listing-img {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  object-fit: cover;
 }
 
 .card-body {
@@ -109,6 +121,8 @@ body {
 
 .show-img {
   height: 50vh;
+  width: 100%;
+  object-fit: cover;
 }
 
 .btns {
@@ -124,5 +138,20 @@ body {
 
 #map {
   height: 400px;
-  width: 80vh;
+  width: 100%;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .navbar { height: auto; }
+  .btns { flex-direction: column; gap: 0.5rem; }
+  .show-img { height: 30vh; }
+  #map { height: 260px; }
+  .f_info { height: auto; padding: 1rem 0; }
+}
+
+@media (min-width: 577px) and (max-width: 991.98px) {
+  #map {
+    height: 360px;
+  }
 }

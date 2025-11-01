@@ -13,8 +13,8 @@ router.get("/itinerary", listingController.renderItineraryForm);
 router.post("/itinerary", listingController.generateItinerary);
 
 router
-  .route("/listings")
-  //index route
+  .route("/")
+  // index route
   .get(wrapAsync(listingController.index))
   // create route
   .post(

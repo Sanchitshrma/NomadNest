@@ -1,9 +1,8 @@
 <% layout("/layouts/boilerplate")%>
 <body>
   <div class="row mt-3">
-    <div class="col-8 offset-2">
-      <br /><br />
-      <h3>Edit your listing (<%=listing._id%>):-</h3>
+    <div class="col-12 col-lg-8 offset-lg-2">
+      <h3>Edit your listing (<%=listing._id%>)</h3>
       <form
         method="POST"
         action="/listings/<%=listing._id%>?_method=PUT"
@@ -39,9 +38,9 @@
           <div class="valid-feedback">Looks good!</div>
         </div>
 
-        <div class="mb-3">
-          Original Listing Image <br />
-          <img src="<%=originalImageUrl%>" />
+<div class="mb-3">
+          <label class="form-label">Original Listing Image</label>
+          <img src="<%=originalImageUrl%>" class="img-fluid rounded" alt="original" />
         </div>
 
         <div class="mb-3">

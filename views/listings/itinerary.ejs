@@ -3,36 +3,24 @@
 <div class="container mt-5">
   <h2 class="mb-4">🧳 Plan Your Trip</h2>
 
-  <form action="/listings/itinerary" method="POST">
-    <div class="mb-3">
+  <form id="itineraryForm" action="/listings/itinerary" method="POST" class="row g-3">
+    <div class="col-12 col-md-8">
       <label for="place" class="form-label">Destination</label>
-      <input
-        type="text"
-        class="form-control"
-        id="place"
-        name="place"
-        required
-      />
+      <input type="text" class="form-control" id="place" name="place" required />
     </div>
-    <div class="mb-3">
+    <div class="col-6 col-md-4">
       <label for="days" class="form-label">Number of Days</label>
-      <input
-        type="number"
-        class="form-control"
-        id="days"
-        name="days"
-        required
-      />
+      <input type="number" class="form-control" id="days" name="days" required />
     </div>
-    <button type="submit" class="btn btn-danger">Generate Itinerary</button>
-    <hr />
-    <p
-      id="wait-message"
-      style="font-size: 16px; margin-top: 12px; font-weight: 500"
-    >
-      Please hold on for a moment after clicking
-      <strong>"Generate Itinerary"</strong> — we're crafting your personalized
-      travel plan.
+    <div class="col-12 d-flex align-items-center gap-3">
+      <button id="genBtn" type="submit" class="btn btn-danger">Generate Itinerary</button>
+      <div id="loading" class="d-none">
+        <span class="spinner-border spinner-border-sm text-danger" role="status" aria-hidden="true"></span>
+        <span class="ms-2 text-muted">Generating itinerary...</span>
+      </div>
+    </div>
+    <p id="wait-message" class="text-muted small">
+      Please hold on for a moment after clicking <strong>"Generate Itinerary"</strong> — we're crafting your personalized travel plan.
     </p>
     <hr />
   </form>
@@ -44,3 +32,24 @@
   </div>
   <% } %>
 </div>
+
+<style>
+  .itinerary-content img { max-width: 100%; height: auto; }
+  .itinerary-content pre, .itinerary-content code { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+
+<script>
+  (function(){
+    const form = document.getElementById('itineraryForm');
+    const btn = document.getElementById('genBtn');
+    const loading = document.getElementById('loading');
+    const msg = document.getElementById('wait-message');
+    if(form){
+      form.addEventListener('submit', function(){
+        btn.setAttribute('disabled', 'disabled');
+        loading.classList.remove('d-none');
+        if(msg) msg.classList.add('d-none');
+      });
+    }
+  })();
+</script>

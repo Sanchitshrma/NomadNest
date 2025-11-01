@@ -57,6 +57,23 @@
     position: relative;
     display: flex;
   }
+
+  /* General spacing */
+  .navbar .nav-link { padding: 0.5rem 0.75rem; }
+  .navbar-brand { margin-right: 0.75rem; }
+  .navbar-collapse { gap: 0.75rem; }
+  .navbar-collapse .navbar-nav { gap: 0.5rem; align-items: center; }
+  .navbar .search-container { margin-bottom: 0; }
+
+  @media (max-width: 576px) {
+    .navbar-nav .search-container { width: 100%; }
+    .search-container { flex-direction: column; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .search-inp { width: 100%; }
+    .search-btn { width: 100%; }
+    .navbar-collapse { align-items: stretch; }
+    .navbar-collapse .navbar-nav { flex-direction: column; align-items: stretch; }
+    .navbar-collapse .navbar-nav + .navbar-nav { margin-top: 0.25rem; }
+  }
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
