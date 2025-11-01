@@ -1,4 +1,5 @@
 <% layout("/layouts/boilerplate")%>
+<% if (typeof avgRating === 'undefined') { var avgRating = null; } %>
 <script>
   const mapToken = "<%=process.env.MAP_TOKEN%>";
   const coordinates = <%-JSON.stringify(listing.geometry.coordinates)%>;
