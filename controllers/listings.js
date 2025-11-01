@@ -163,21 +163,32 @@ module.exports.showListing = async (req, res) => {
     // ignore geocode errors for view rendering
   }
 
-  // Basic amenities (until dedicated schema exists)
-  const amenities = [
-    { icon: "fa-wifi", label: "Free WiFi" },
-    { icon: "fa-square-parking", label: "Parking" },
-    { icon: "fa-snowflake", label: "Air Conditioning" },
-    { icon: "fa-mug-saucer", label: "Breakfast Included" },
-    { icon: "fa-kitchen-set", label: "Kitchen" },
-    { icon: "fa-soap", label: "Washer" },
-    { icon: "fa-tv", label: "TV" },
-    { icon: "fa-dumbbell", label: "Gym" },
-    { icon: "fa-mountain", label: "Mountain View" },
-    { icon: "fa-leaf", label: "Nature View" },
-  ];
+  // Map listing.amenities -> icons; fallback to defaults if none
+  const ICONS = {
+    "Free WiFi": "fa-wifi",
+    Parking: "fa-square-parking",
+    "Air Conditioning": "fa-snowflake",
+    "Breakfast Included": "fa-mug-saucer",
+    Kitchen: "fa-kitchen-set",
+    Washer: "fa-soap",
+    TV: "fa-tv",
+    Gym: "fa-dumbbell",
+    "Mountain View": "fa-mountain",
+    "Nature View": "fa-leaf",
+    "Pet Friendly": "fa-paw",
+    Pool: "fa-person-swimming",
+  };
+  let amenitiesList = (listing.amenities && listing.amenities.length)
+    ? listing.amenities.map((label) => ({ icon: ICONS[label] || "fa-circle-check", label }))
+    : [
+        { icon: "fa-wifi", label: "Free WiFi" },
+        { icon: "fa-square-parking", label: "Parking" },
+        { icon: "fa-snowflake", label: "Air Conditioning" },
+        { icon: "fa-mug-saucer", label: "Breakfast Included" },
+        { icon: "fa-kitchen-set", label: "Kitchen" },
+      ];
 
-  res.render("listings/show.ejs", { listing, category, amenities, similarListings });
+  res.render("listings/show.ejs", { listing, category, amenities: amenitiesList, similarListings, avgRating });
 };
 
 module.exports.createListing = async (req, res) => {
