@@ -168,6 +168,23 @@ body {
   border: none !important;
 }
 
+/* Brand buttons */
+.btn-brand {
+  background-color: #fa424d !important;
+  border: none !important;
+  color: #fff !important;
+}
+.btn-outline-brand {
+  border: 1px solid #fa424d !important;
+  color: #fa424d !important;
+  background: #fff !important;
+}
+.btn-outline-brand:hover,
+.btn-outline-brand:focus {
+  background-color: #fa424d !important;
+  color: #fff !important;
+}
+
 /* Edit page */
 .edit-btn {
   background-color: #fa424d !important;

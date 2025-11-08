@@ -188,6 +188,10 @@ module.exports.showListing = async (req, res) => {
         { icon: "fa-kitchen-set", label: "Kitchen" },
       ];
 
+  // Compute average rating (one decimal) if any reviews exist
+  const ratings = (listing.reviews || []).map(r => Number(r.rating) || 0);
+  const avgRating = ratings.length ? Math.round((ratings.reduce((a,b)=>a+b,0) / ratings.length) * 10) / 10 : null;
+
   res.render("listings/show.ejs", { listing, category, amenities: amenitiesList, similarListings, avgRating });
 };
 
