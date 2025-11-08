@@ -150,6 +150,14 @@
   <div class="col">
     <a href="/listings/<%= listing._id %>" class="listing_links">
       <div class="card listing-card h-100">
+        <div class="card-badges">
+          <% if (listing.location) { %>
+            <span class="chip"><i class="fa-solid fa-location-dot"></i><%= listing.location %></span>
+          <% } %>
+          <% if (listing.country) { %>
+            <span class="chip"><%= listing.country %></span>
+          <% } %>
+        </div>
         <img src="<%= listing.image.url %>" class="card-img-top listing-img" alt="<%= listing.title %>" />
         <div class="card-img-overlay"></div>
         <div class="card-body">

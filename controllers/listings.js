@@ -308,5 +308,7 @@ module.exports.landingPage = (req, res) => {
       caption: "Every road trip writes its own poetry.",
     },
   ];
+  // Remove the last image from the landing set
+  landingImages.pop();
   res.render("home", { landingImages });
 };
