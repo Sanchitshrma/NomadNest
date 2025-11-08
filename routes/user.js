@@ -24,4 +24,15 @@ router
 
 router.get("/logout", userController.logout);
 
+// Password reset
+router
+  .route("/forgot")
+  .get(userController.renderForgotForm)
+  .post(wrapAsync(userController.sendResetOtp));
+
+router
+  .route("/reset")
+  .get(userController.renderResetForm)
+  .post(wrapAsync(userController.resetWithOtp));
+
 module.exports = router;

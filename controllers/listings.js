@@ -323,5 +323,7 @@ module.exports.landingPage = (req, res) => {
       caption: "Journey begins where the signal ends.",
     },
   ];
+  // Remove the last image from the landing set
+  landingImages.pop();
   res.render("home", { landingImages });
 };

@@ -26,9 +26,12 @@
   </form>
 
   <% if (itinerary) { %>
-  <div class="mt-4 p-3 bg-light rounded shadow">
-    <h4>Your Itinerary:</h4>
-    <div class="itinerary-content"><%- itinerary %></div>
+  <div class="mt-4 p-3 bg-light rounded shadow" id="itineraryCard">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Your Itinerary</h4>
+      <button id="downloadPdf" type="button" class="btn btn-outline-danger btn-sm">Download PDF</button>
+    </div>
+    <div class="itinerary-content mt-3" id="itineraryContent"><%- itinerary %></div>
   </div>
   <% } %>
 </div>
@@ -37,6 +40,9 @@
   .itinerary-content img { max-width: 100%; height: auto; }
   .itinerary-content pre, .itinerary-content code { white-space: pre-wrap; word-wrap: break-word; }
 </style>
+
+<!-- Lightweight client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
   (function(){
@@ -49,6 +55,25 @@
         btn.setAttribute('disabled', 'disabled');
         loading.classList.remove('d-none');
         if(msg) msg.classList.add('d-none');
+      });
+    }
+
+    // PDF download handler
+    const dlBtn = document.getElementById('downloadPdf');
+    const content = document.getElementById('itineraryContent');
+    if (dlBtn && content && typeof html2pdf !== 'undefined') {
+      dlBtn.addEventListener('click', function(){
+        const place = (document.getElementById('place') && document.getElementById('place').value) || 'itinerary';
+        const days = (document.getElementById('days') && document.getElementById('days').value) || '';
+        const filename = `${place}-${days ? days + 'd-' : ''}itinerary`.replace(/\s+/g,'_') + '.pdf';
+        const opt = {
+          margin: [10,10,10,10],
+          filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        };
+        html2pdf().set(opt).from(content).save();
       });
     }
   })();

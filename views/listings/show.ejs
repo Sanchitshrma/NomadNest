@@ -5,13 +5,17 @@
   const coordinates = <%-JSON.stringify(listing.geometry.coordinates)%>;
   const listing = <%-JSON.stringify(listing)%>;
 </script>
+<<<<<<< HEAD
 <body>
   <div class="row mt-4 g-5">
     <div class="col-12 col-lg-8 offset-lg-2">
+=======
+<div class="row mt-3">
+  <div class="col-12 col-lg-8 offset-lg-2">
+>>>>>>> master
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
         <div>
           <h3 class="mb-1"><%= listing.title %></h3>
-          <span class="badge badge-category"><%= (category && category.label) || 'Trending' %></span>
         </div>
         <div class="text-end">
           <div class="h5 mb-0">&#8377; <%= listing.price.toLocaleString('en-IN') %> <small class="text-muted">per night</small></div>
@@ -20,11 +24,36 @@
     </div>
 
     <div class="card col-12 col-lg-8 offset-lg-2 show-card listing-card">
-      <img
-        src="<%=listing.image.url%>"
-        class="card-img-top show-img"
-        alt="listing_image"
-      />
+      <div class="media-wrap">
+        <div class="img-frame">
+          <% 
+            const catKey = (category && category.key) || 'trending';
+            const iconMap = {
+              rooms: 'fa-solid fa-bed',
+              mountains: 'fa-solid fa-mountain',
+              pools: 'fa-solid fa-person-swimming',
+              camping: 'fa-solid fa-campground',
+              arctic: 'fa-regular fa-snowflake',
+              skiing: 'fa-solid fa-person-skiing',
+              campervan: 'fa-solid fa-caravan',
+              hills: 'fa-solid fa-mountain-city',
+              castles: 'fa-brands fa-fort-awesome-alt',
+              luxe: 'fa-solid fa-star',
+              cruise: 'fa-solid fa-ferry',
+              trending: 'fa-solid fa-fire'
+            };
+            const iconClass = iconMap[catKey] || 'fa-solid fa-fire';
+          %>
+          <div class="card-badges">
+            <span class="chip chip-accent"><i class="<%= iconClass %>"></i><%= (category && category.label) || 'Trending' %></span>
+          </div>
+          <img
+            src="<%=listing.image.url%>"
+            class="card-img-top show-img"
+            alt="listing_image"
+          />
+        </div>
+      </div>
       <div class="card-body">
         <div class="mb-2 text-muted">
           Owner:
@@ -37,14 +66,15 @@
 
         <div class="row g-2 align-items-end mt-3">
           <div class="col-6">
-            <label class="form-label">Check-in</label>
-            <input type="date" class="form-control" />
+            <label class="form-label" for="checkIn">Check-in</label>
+            <input type="date" class="form-control" id="checkIn" />
           </div>
           <div class="col-6">
-            <label class="form-label">Check-out</label>
-            <input type="date" class="form-control" />
+            <label class="form-label" for="checkOut">Check-out</label>
+            <input type="date" class="form-control" id="checkOut" />
           </div>
         </div>
+        <div id="bookingSummary" class="mt-3" aria-live="polite"></div>
       </div>
     </div>
 
@@ -204,4 +234,4 @@
     <% } %>
   </div>
   <script src="/js/map.js"></script>
-</body>
+  <script src="/js/booking.js"></script>

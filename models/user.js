@@ -8,6 +8,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  // Password reset fields
+  resetOtpHash: String,
+  resetOtpExpires: Date,
+  resetOtpTries: { type: Number, default: 0 },
 });
 
 userSchema.plugin(passportLocalMongoose);

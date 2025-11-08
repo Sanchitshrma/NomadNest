@@ -1,0 +1,27 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <h1 class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">Reset Password</h1>
+  <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+    <form action="/reset" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="email" class="form-label">Registered email</label>
+        <input type="email" class="form-control" id="email" name="email" required />
+      </div>
+      <div class="mb-3">
+        <label for="otp" class="form-label">OTP</label>
+        <input type="text" pattern="\d{6}" maxlength="6" class="form-control" id="otp" name="otp" placeholder="6-digit code" required />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">New password</label>
+        <input type="password" class="form-control" id="password" name="password" required />
+      </div>
+      <div class="mb-3">
+        <label for="confirm" class="form-label">Confirm password</label>
+        <input type="password" class="form-control" id="confirm" name="confirm" required />
+      </div>
+      <button class="btn btn-danger">Update password</button>
+      <a href="/forgot" class="btn btn-outline-secondary ms-2">Send me a new OTP</a>
+    </form>
+  </div>
+</div>
