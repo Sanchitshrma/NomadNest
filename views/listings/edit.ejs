@@ -113,6 +113,12 @@
             <% }) %>
           </div>
         </div>
+
+        <div class="mb-3">
+          <label for="tags" class="form-label">Tags (comma separated)</label>
+          <input type="text" class="form-control" id="tags" name="listing[tags]" value="<%= (listing.tags || []).join(', ') %>" />
+          <div class="form-text">Shown as chips on the image in the listing page.</div>
+        </div>
         <button class="btn btn-dark edit-btn mt-3">Edit</button>
       </form>
     </div>

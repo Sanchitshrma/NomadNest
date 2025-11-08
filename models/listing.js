@@ -15,10 +15,9 @@ const listingSchema = new Schema({
   price: Number,
   location: String,
   country: String,
-  amenities: {
-    type: [String],
-    default: [],
-  },
+  // New: customizable amenities and tags
+  amenities: { type: [String], default: [] },
+  tags: { type: [String], default: [] },
   reviews: [
     {
       type: Schema.Types.ObjectId,
@@ -41,12 +40,12 @@ const listingSchema = new Schema({
     },
   },
 });
-
-listingSchema.post("findOneAndDelete", async (listing) => {
-  if (listing) {
-    await Review.deleteMany({ _id: { $in: listing.reviews } });
-  }
-});
+required: true,
+  listingSchema.post("findOneAndDelete", async (listing) => {
+    if (listing) {
+      await Review.deleteMany({ _id: { $in: listing.reviews } });
+    }
+  });
 
 let Listing = mongoose.model("Listing", listingSchema);
 

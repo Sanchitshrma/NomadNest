@@ -31,6 +31,9 @@ module.exports.listingSchema = Joi.object({
     amenities: Joi.alternatives()
       .try(Joi.array().items(Joi.string()), Joi.string())
       .optional(),
+    tags: Joi.alternatives()
+      .try(Joi.array().items(Joi.string()), Joi.string())
+      .optional(),
   }).required(),
 });
 

@@ -33,10 +33,10 @@
         cruise: 'fa-solid fa-ferry', trending: 'fa-solid fa-fire' }; const
         iconClass = iconMap[catKey] || 'fa-solid fa-fire'; %>
         <div class="card-badges">
-          <span class="chip chip-accent"
-            ><i class="<%= iconClass %>"></i><%= (category && category.label) ||
-            'Trending' %></span
-          >
+          <span class="chip chip-accent"><i class="<%= iconClass %>"></i><%= (category && category.label) || 'Trending' %></span>
+          <% (listing.tags || []).forEach(t => { %>
+            <span class="chip"><%= t %></span>
+          <% }) %>
         </div>
         <img
           src="<%=listing.image.url%>"

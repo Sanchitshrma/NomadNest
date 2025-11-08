@@ -109,7 +109,9 @@ module.exports.showListing = async (req, res) => {
   }
 
   // Derive category heuristically from title/description/location
-  const text = `${listing.title} ${listing.description || ""} ${listing.location || ""} ${listing.country || ""}`;
+  const text = `${listing.title} ${listing.description || ""} ${
+    listing.location || ""
+  } ${listing.country || ""}`;
   const categoryMap = [
     { key: "rooms", label: "Rooms", terms: ["room"] },
     { key: "mountains", label: "Mountains", terms: ["mountain", "alpine"] },
@@ -121,7 +123,11 @@ module.exports.showListing = async (req, res) => {
     { key: "hills", label: "Hills", terms: ["hill", "hills"] },
     { key: "castles", label: "Castles", terms: ["castle", "historic"] },
     { key: "luxe", label: "Luxe", terms: ["luxe", "luxury", "penthouse"] },
-    { key: "cruise", label: "Cruise", terms: ["cruise", "island", "beachfront"] },
+    {
+      key: "cruise",
+      label: "Cruise",
+      terms: ["cruise", "island", "beachfront"],
+    },
   ];
   let category = { key: "trending", label: "Trending", terms: [] };
   for (const c of categoryMap) {
@@ -178,21 +184,34 @@ module.exports.showListing = async (req, res) => {
     "Pet Friendly": "fa-paw",
     Pool: "fa-person-swimming",
   };
-  let amenitiesList = (listing.amenities && listing.amenities.length)
-    ? listing.amenities.map((label) => ({ icon: ICONS[label] || "fa-circle-check", label }))
-    : [
-        { icon: "fa-wifi", label: "Free WiFi" },
-        { icon: "fa-square-parking", label: "Parking" },
-        { icon: "fa-snowflake", label: "Air Conditioning" },
-        { icon: "fa-mug-saucer", label: "Breakfast Included" },
-        { icon: "fa-kitchen-set", label: "Kitchen" },
-      ];
+  let amenitiesList =
+    listing.amenities && listing.amenities.length
+      ? listing.amenities.map((label) => ({
+          icon: ICONS[label] || "fa-circle-check",
+          label,
+        }))
+      : [
+          { icon: "fa-wifi", label: "Free WiFi" },
+          { icon: "fa-square-parking", label: "Parking" },
+          { icon: "fa-snowflake", label: "Air Conditioning" },
+          { icon: "fa-mug-saucer", label: "Breakfast Included" },
+          { icon: "fa-kitchen-set", label: "Kitchen" },
+        ];
 
   // Compute average rating (one decimal) if any reviews exist
-  const ratings = (listing.reviews || []).map(r => Number(r.rating) || 0);
-  const avgRating = ratings.length ? Math.round((ratings.reduce((a,b)=>a+b,0) / ratings.length) * 10) / 10 : null;
+  const ratings = (listing.reviews || []).map((r) => Number(r.rating) || 0);
+  const avgRating = ratings.length
+    ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+      10
+    : null;
 
-  res.render("listings/show.ejs", { listing, category, amenities: amenitiesList, similarListings, avgRating });
+  res.render("listings/show.ejs", {
+    listing,
+    category,
+    amenities: amenitiesList,
+    similarListings,
+    avgRating,
+  });
 };
 
 module.exports.createListing = async (req, res) => {
@@ -208,6 +227,20 @@ module.exports.createListing = async (req, res) => {
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
+
+  // Normalize amenities to array
+  const am = req.body.listing.amenities;
+  newListing.amenities = Array.isArray(am) ? am : am ? [am] : [];
+
+  // Normalize tags: allow comma-separated string or array
+  let tagsIn = req.body.listing.tags;
+  if (typeof tagsIn === "string") {
+    tagsIn = tagsIn
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+  newListing.tags = Array.isArray(tagsIn) ? tagsIn : [];
 
   newListing.geometry = response.body.features[0].geometry;
 
@@ -233,12 +266,27 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
   let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+  // Update amenities
+  const am = req.body.listing.amenities;
+  listing.amenities = Array.isArray(am) ? am : am ? [am] : [];
+
+  // Update tags
+  let tagsIn = req.body.listing.tags;
+  if (typeof tagsIn === "string") {
+    tagsIn = tagsIn
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+  listing.tags = Array.isArray(tagsIn) ? tagsIn : [];
+
   if (typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = { url, filename };
-    await listing.save();
   }
+  await listing.save();
   req.flash("success", " Listing is updated !");
   res.redirect(`/listings/${id}`);
 };
@@ -322,10 +370,10 @@ module.exports.landingPage = (req, res) => {
       url: "/images/roadtrip.jpg",
       caption: "Every road trip writes its own poetry.",
     },
-    {
-      url: "/images/extra.jpg",
-      caption: "Journey begins where the signal ends.",
-    },
+    // {
+    //   url: "/images/extra.jpg",
+    //   caption: "Journey begins where the signal ends.",
+    // },
   ];
   // Remove the last image from the landing set
   landingImages.pop();
