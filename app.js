@@ -5,6 +5,7 @@ if (process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+mongoose.set("bufferCommands", false); // fail fast instead of buffering operations
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -40,14 +41,20 @@ main()
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
-    console.warn("Falling back to in-memory sessions. Logins won't persist across restarts.");
-    // Fallback to memory store so routes still work when DB is unreachable
+    if (process.env.ATLASDB_URL) {
+      console.error("Cannot start server without a database connection in production. Exiting.");
+      process.exit(1);
+    }
+    console.warn("Starting with in-memory sessions for local dev (DB offline).");
     const memoryStore = new session.MemoryStore();
     bootstrap(memoryStore);
   });
 
 async function main() {
-  await mongoose.connect(dbUrl, { serverSelectionTimeoutMS: 8000 });
+  await mongoose.connect(dbUrl, { 
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000
+  });
 }
 
 function bootstrap(store) {
@@ -57,6 +64,18 @@ function bootstrap(store) {
   app.use(methodOverride("_method"));
   app.engine("ejs", ejsMate);
   app.use(express.static(path.join(__dirname, "/public")));
+
+  // If DB is not connected, return a friendly error instead of timing out
+  app.use((req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+      return res
+        .status(503)
+        .render("./listings/error.ejs", {
+          message: "Our database is temporarily unavailable. Please try again in a minute.",
+        });
+    }
+    next();
+  });
 
   const sessionOptions = {
     store,
