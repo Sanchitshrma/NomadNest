@@ -40,7 +40,9 @@ main()
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
-    console.warn("Falling back to in-memory sessions. Logins won't persist across restarts.");
+    console.warn(
+      "Falling back to in-memory sessions. Logins won't persist across restarts.",
+    );
     // Fallback to memory store so routes still work when DB is unreachable
     const memoryStore = new session.MemoryStore();
     bootstrap(memoryStore);
@@ -57,6 +59,7 @@ function bootstrap(store) {
   app.use(methodOverride("_method"));
   app.engine("ejs", ejsMate);
   app.use(express.static(path.join(__dirname, "/public")));
+  app.use("/Images", express.static(path.join(__dirname, "Images")));
 
   const sessionOptions = {
     store,
