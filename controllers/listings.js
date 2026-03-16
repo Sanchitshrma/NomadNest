@@ -167,19 +167,25 @@ module.exports.showListing = async (req, res) => {
     // ignore geocode errors for view rendering
   }
 
-  // Basic amenities (until dedicated schema exists)
-  const amenities = [
-    { icon: "fa-wifi", label: "Free WiFi" },
-    { icon: "fa-square-parking", label: "Parking" },
-    { icon: "fa-snowflake", label: "Air Conditioning" },
-    { icon: "fa-mug-saucer", label: "Breakfast Included" },
-    { icon: "fa-kitchen-set", label: "Kitchen" },
-    { icon: "fa-soap", label: "Washer" },
-    { icon: "fa-tv", label: "TV" },
-    { icon: "fa-dumbbell", label: "Gym" },
-    { icon: "fa-mountain", label: "Mountain View" },
-    { icon: "fa-leaf", label: "Nature View" },
-  ];
+  // Map stored amenity labels → Font Awesome icons
+  const amenityIconMap = {
+    "Free WiFi": "fa-wifi",
+    "Parking": "fa-square-parking",
+    "Air Conditioning": "fa-snowflake",
+    "Breakfast": "fa-mug-saucer",
+    "Kitchen": "fa-kitchen-set",
+    "Washer": "fa-soap",
+    "TV": "fa-tv",
+    "Gym": "fa-dumbbell",
+    "Mountain View": "fa-mountain",
+    "Nature View": "fa-leaf",
+    "Hot Tub": "fa-hot-tub-person",
+    "Pool": "fa-person-swimming",
+  };
+  const amenities = (listing.amenities || []).map((a) => ({
+    icon: amenityIconMap[a] || "fa-star",
+    label: a,
+  }));
 
   res.render("listings/show.ejs", {
     listing,

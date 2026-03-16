@@ -66,7 +66,15 @@
 </style>
 
 <div class="container-fluid">
-  <!-- Image Grid with Captions -->
+  <!-- Hero -->
+  <div class="hero-section">
+    <h1 class="hero-title">Find your <span style="color: #fe424d;">perfect stay</span></h1>
+    <p class="hero-subtitle">Discover handpicked properties and unique experiences around the world</p>
+    <a href="/listings" class="hero-cta">Explore stays</a>
+  </div>
+
+  <!-- Featured destinations -->
+  <p class="section-heading">Featured destinations</p>
   <div class="photo-grid">
     <% landingImages.forEach(image => { %>
     <div class="photo-tile">
@@ -76,8 +84,8 @@
     <% }) %>
   </div>
 
-  <!-- Explore Button -->
+  <!-- Bottom CTA -->
   <div class="explore-btn-container">
-    <a href="/listings" class="btn btn-danger explore-btn">Explore NomadNest</a>
+    <a href="/listings" class="btn btn-outline-danger rounded-pill px-4">View all listings &rarr;</a>
   </div>
 </div>

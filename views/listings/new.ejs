@@ -1,7 +1,10 @@
 <% layout("/layouts/boilerplate") %>
 <div class="row mt-2">
   <div class="col-12 col-lg-8 offset-lg-2">
-    <h3>Create New Listings</h3>
+    <div class="form-page-header">
+      <h3>Add your place</h3>
+      <p>Share your space with travelers around the world</p>
+    </div>
     <form
       id="listingForm"
       method="POST"
@@ -93,7 +96,131 @@
         <div class="invalid-feedback">Location is required.</div>
         <div class="valid-feedback">Looks good!</div>
       </div>
+      <!-- Amenities -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Amenities</label>
+        <p class="text-muted small mb-2">Select all that apply</p>
+        <div class="amenity-picker">
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Free WiFi" />
+            <span class="amenity-chip-select"><i class="fa fa-wifi"></i> Free WiFi</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Parking" />
+            <span class="amenity-chip-select"><i class="fa fa-square-parking"></i> Parking</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Air Conditioning" />
+            <span class="amenity-chip-select"><i class="fa fa-snowflake"></i> Air Conditioning</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Breakfast" />
+            <span class="amenity-chip-select"><i class="fa fa-mug-saucer"></i> Breakfast</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Kitchen" />
+            <span class="amenity-chip-select"><i class="fa fa-kitchen-set"></i> Kitchen</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Washer" />
+            <span class="amenity-chip-select"><i class="fa fa-soap"></i> Washer</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="TV" />
+            <span class="amenity-chip-select"><i class="fa fa-tv"></i> TV</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Gym" />
+            <span class="amenity-chip-select"><i class="fa fa-dumbbell"></i> Gym</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Mountain View" />
+            <span class="amenity-chip-select"><i class="fa fa-mountain"></i> Mountain View</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Nature View" />
+            <span class="amenity-chip-select"><i class="fa fa-leaf"></i> Nature View</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Hot Tub" />
+            <span class="amenity-chip-select"><i class="fa fa-hot-tub-person"></i> Hot Tub</span>
+          </label>
+          <label class="amenity-option">
+            <input type="checkbox" name="listing[amenities][]" value="Pool" />
+            <span class="amenity-chip-select"><i class="fa fa-person-swimming"></i> Pool</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Tags</label>
+        <p class="text-muted small mb-2">Add keywords to help travelers find your listing</p>
+        <div class="d-flex gap-2 mb-2">
+          <input
+            type="text"
+            id="tagInput"
+            class="form-control"
+            placeholder="e.g. pet-friendly, family, romantic..."
+            autocomplete="off"
+          />
+          <button type="button" class="btn btn-outline-dark" id="addTagBtn">+ Add</button>
+        </div>
+        <div class="d-flex flex-wrap gap-2" id="tagsContainer"></div>
+      </div>
+
       <button class="btn btn-dark add-btn mb-3" type="submit">Add</button>
     </form>
+
+    <script>
+      (function () {
+        const tagInput = document.getElementById("tagInput");
+        const addTagBtn = document.getElementById("addTagBtn");
+        const tagsContainer = document.getElementById("tagsContainer");
+
+        function addTag(raw) {
+          const tag = raw.trim();
+          if (!tag) return;
+
+          // Avoid duplicates
+          const existing = [...tagsContainer.querySelectorAll('input[type="hidden"]')].map(
+            (el) => el.value.toLowerCase()
+          );
+          if (existing.includes(tag.toLowerCase())) {
+            tagInput.value = "";
+            return;
+          }
+
+          const chip = document.createElement("span");
+          chip.className = "tag-chip";
+
+          const label = document.createTextNode("#" + tag + "\u00a0");
+          const btn = document.createElement("span");
+          btn.className = "remove-tag";
+          btn.setAttribute("aria-label", "Remove tag");
+          btn.textContent = "\u00d7";
+          btn.addEventListener("click", () => chip.remove());
+
+          const hidden = document.createElement("input");
+          hidden.type = "hidden";
+          hidden.name = "listing[tags][]"; 
+          hidden.value = tag;
+
+          chip.appendChild(label);
+          chip.appendChild(btn);
+          chip.appendChild(hidden);
+          tagsContainer.appendChild(chip);
+          tagInput.value = "";
+        }
+
+        addTagBtn.addEventListener("click", () => addTag(tagInput.value));
+        tagInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addTag(tagInput.value);
+          }
+        });
+      })();
+    </script>
   </div>
 </div>

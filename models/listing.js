@@ -25,6 +25,8 @@ const listingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  amenities: [String],
+  tags: [String],
   geometry: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`

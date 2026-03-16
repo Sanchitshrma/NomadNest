@@ -28,6 +28,8 @@ module.exports.listingSchema = Joi.object({
     location: Joi.string().required(),
     price: Joi.number().required().min(0),
     image: Joi.string().allow("", null),
+    amenities: Joi.array().items(Joi.string()).optional(),
+    tags: Joi.array().items(Joi.string()).optional(),
   }).required(),
 });
 
